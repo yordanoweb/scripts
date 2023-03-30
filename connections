@@ -1,0 +1,8 @@
+#!/bin/sh
+
+conns=$(ss -ntp | grep -E --color=never -c "ESTAB|SYN-SENT")
+
+echo $conns
+echo $conns
+uptime -p | sed "s/up //"
+echo connections

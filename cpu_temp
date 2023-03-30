@@ -1,0 +1,8 @@
+#!/bin/sh
+
+temp=$(sensors | grep -A6 --color=never coretemp | grep --color=never Package | sed "s/[+C°]//g" | awk '{print $4}')
+
+echo $temp
+echo $temp
+uptime -p | sed "s/up //"
+echo cpu_temp

@@ -1,0 +1,11 @@
+#!/bin/sh
+
+ip -s addr show | grep --color=never -A10 wlan0 > /tmp/wlan_traffic
+
+rx=$(cat /tmp/wlan_traffic | grep --color=never -A1 RX | tail -n 1 | awk '{print $1}')
+tx=$(cat /tmp/wlan_traffic | grep --color=never -A1 TX | tail -n 1 | awk '{print $1}')
+
+echo $rx
+echo $tx
+uptime -p | sed "s/up //"
+echo wlan_traffic

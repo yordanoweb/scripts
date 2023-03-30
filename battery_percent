@@ -1,0 +1,8 @@
+#!/bin/sh
+
+bat_percent=$(upower -d | grep --color=never -A100 BAT1 | grep --color=never percentage | tail -n 1 | awk '{print $2}')
+
+echo $bat_percent | sed "s/%//"
+echo $bat_percent | sed "s/%//"
+uptime -p | sed "s/up //"
+echo battery_percent
