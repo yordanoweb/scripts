@@ -1,0 +1,9 @@
+#!/bin/sh
+
+part_size=$(df --block-size=1M | grep --color=never nvme0n1p1 | awk '{print $2}')
+part_usage=$(df --block-size=1M | grep --color=never nvme0n1p1 | awk '{print $3}')
+
+echo $part_size
+echo $part_usage
+uptime -p | sed "s/up //"
+echo data_partition_size
