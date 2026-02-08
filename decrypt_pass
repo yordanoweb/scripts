@@ -1,0 +1,5 @@
+#!/bin/sh
+
+SECRET_FILE="$(dirname -- $0)/.secret"
+
+echo "$1" | openssl enc -aes-256-cbc -md sha512 -a -d -salt -pass file:$SECRET_FILE

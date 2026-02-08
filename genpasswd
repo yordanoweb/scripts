@@ -1,0 +1,4 @@
+#!/bin/sh
+
+gpg --gen-random --armor 1 14
+sleep 1

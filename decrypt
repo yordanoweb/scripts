@@ -1,0 +1,3 @@
+#!/bin/sh
+
+gpg -q --decrypt --pinentry-mode loopback $1

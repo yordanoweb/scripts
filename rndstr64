@@ -1,0 +1,4 @@
+#!/bin/sh
+
+< /dev/urandom tr -dc 3-8A-Za-z0-9 | head -c${1:-64}; echo;
+
