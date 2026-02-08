@@ -1,0 +1,249 @@
+#!/bin/sh
+
+###################################################
+# Create the graph first
+###################################################
+#
+# rrdcreate wlan-traffic.rrd --start now-2h --step 60 DS:in:COUNTER:120:U:2000000 DS:out:COUNTER:120:U:2000000 RRA:AVERAGE:0.5:1:525600 RRA:AVERAGE:0.5:60:8760
+#
+# rrdtool create disk-32gb-temperature.rrd --start now --step 60 DS:temperature:GAUGE:120:U:U RRA:AVERAGE:0.5:1:1440
+#
+###################################################
+
+######################################################################
+######################################################################
+######################################################################
+# CREATE THE DATASOURCES
+######################################################################
+######################################################################
+######################################################################
+
+if [ ! -f ~/www/mrtg/cpu-temperature.rrd ]; then
+    rrdtool create /home/yordano/www/mrtg/cpu-temperature.rrd --start now-8h --step 60 \
+        DS:temperature:GAUGE:120:U:1000000 \
+        RRA:AVERAGE:0.5:1:500 \
+        RRA:AVERAGE:0.5:1:51840 \
+        RRA:AVERAGE:0.5:24:2160 \
+        RRA:AVERAGE:0.5:6:8736 \
+        RRA:AVERAGE:0.5:288:797 \
+        RRA:MIN:0.5:1:51840 \
+        RRA:MIN:0.5:24:2160 \
+        RRA:MIN:0.5:6:8736 \
+        RRA:MIN:0.5:288:797 \
+        RRA:MAX:0.5:1:500 \
+        RRA:MAX:0.5:24:2160 \
+        RRA:MAX:0.5:6:8736 \
+        RRA:MAX:0.5:288:797 \
+        RRA:LAST:0.5:1:51840 \
+        RRA:LAST:0.5:24:2160 \
+        RRA:LAST:0.5:6:8736 \
+        RRA:LAST:0.5:288:797
+fi
+/usr/bin/rrdtool update ~/www/mrtg/cpu-temperature.rrd N:$($HOME/etc/cpu_temp | head -n 1)
+
+if [ ! -f ~/www/mrtg/disk-32gb-temperature.rrd ]; then
+    rrdtool create /home/yordano/www/mrtg/disk-32gb-temperature.rrd --start now-8h --step 60 \
+        DS:temperature:GAUGE:120:U:1000000 \
+        RRA:AVERAGE:0.5:1:500 \
+        RRA:AVERAGE:0.5:1:51840 \
+        RRA:AVERAGE:0.5:24:2160 \
+        RRA:AVERAGE:0.5:6:8736 \
+        RRA:AVERAGE:0.5:288:797 \
+        RRA:MIN:0.5:1:51840 \
+        RRA:MIN:0.5:24:2160 \
+        RRA:MIN:0.5:6:8736 \
+        RRA:MIN:0.5:288:797 \
+        RRA:MAX:0.5:1:500 \
+        RRA:MAX:0.5:24:2160 \
+        RRA:MAX:0.5:6:8736 \
+        RRA:MAX:0.5:288:797 \
+        RRA:LAST:0.5:1:51840 \
+        RRA:LAST:0.5:24:2160 \
+        RRA:LAST:0.5:6:8736 \
+        RRA:LAST:0.5:288:797
+fi
+/usr/bin/rrdtool update ~/www/mrtg/disk-32gb-temperature.rrd N:$(sudo smartctl --all /dev/nvme1 | grep --color=never -E "^Temperature" | awk '{print $2}')
+
+if [ ! -f ~/www/mrtg/disk-512gb-temperature.rrd ]; then
+    rrdtool create /home/yordano/www/mrtg/disk-512gb-temperature.rrd --start now-8h --step 60 \
+        DS:temperature:GAUGE:120:U:1000000 \
+        RRA:AVERAGE:0.5:1:500 \
+        RRA:AVERAGE:0.5:1:51840 \
+        RRA:AVERAGE:0.5:24:2160 \
+        RRA:AVERAGE:0.5:6:8736 \
+        RRA:AVERAGE:0.5:288:797 \
+        RRA:MIN:0.5:1:51840 \
+        RRA:MIN:0.5:24:2160 \
+        RRA:MIN:0.5:6:8736 \
+        RRA:MIN:0.5:288:797 \
+        RRA:MAX:0.5:1:500 \
+        RRA:MAX:0.5:24:2160 \
+        RRA:MAX:0.5:6:8736 \
+        RRA:MAX:0.5:288:797 \
+        RRA:LAST:0.5:1:51840 \
+        RRA:LAST:0.5:24:2160 \
+        RRA:LAST:0.5:6:8736 \
+        RRA:LAST:0.5:288:797
+fi
+/usr/bin/rrdtool update ~/www/mrtg/disk-512gb-temperature.rrd N:$(sudo smartctl --all /dev/nvme0 | grep --color=never -E "^Temperature" | awk '{print $2}')
+
+if [ ! -f ~/www/mrtg/wlan-traffic.rrd ]; then
+    rrdtool create /home/yordano/www/mrtg/wlan-traffic.rrd --start now-8h --step 60 \
+        DS:out:COUNTER:120:U:2000000 \
+        DS:in:COUNTER:120:U:2000000 \
+        RRA:AVERAGE:0.5:1:500 \
+        RRA:AVERAGE:0.5:1:51840 \
+        RRA:AVERAGE:0.5:24:2160 \
+        RRA:AVERAGE:0.5:6:8736 \
+        RRA:AVERAGE:0.5:288:797 \
+        RRA:MIN:0.5:1:51840 \
+        RRA:MIN:0.5:24:2160 \
+        RRA:MIN:0.5:6:8736 \
+        RRA:MIN:0.5:288:797 \
+        RRA:MAX:0.5:1:500 \
+        RRA:MAX:0.5:24:2160 \
+        RRA:MAX:0.5:6:8736 \
+        RRA:MAX:0.5:288:797 \
+        RRA:LAST:0.5:1:51840 \
+        RRA:LAST:0.5:24:2160 \
+        RRA:LAST:0.5:6:8736 \
+        RRA:LAST:0.5:288:797
+fi
+/usr/bin/rrdtool update ~/www/mrtg/wlan-traffic.rrd N:$($HOME/etc/wlan_traffic | head -n 1):$($HOME/etc/wlan_traffic | head -n 2 | tail -n 1)
+
+if [ ! -f ~/www/mrtg/system-memory.rrd ]; then
+    rrdtool create /home/yordano/www/mrtg/system-memory.rrd --start now-8h --step 60 \
+        DS:mem:GAUGE:120:U:10000000000 \
+        RRA:AVERAGE:0.5:1:500 \
+        RRA:AVERAGE:0.5:1:51840 \
+        RRA:AVERAGE:0.5:24:2160 \
+        RRA:AVERAGE:0.5:6:8736 \
+        RRA:AVERAGE:0.5:288:797 \
+        RRA:MIN:0.5:1:51840 \
+        RRA:MIN:0.5:24:2160 \
+        RRA:MIN:0.5:6:8736 \
+        RRA:MIN:0.5:288:797 \
+        RRA:MAX:0.5:1:500 \
+        RRA:MAX:0.5:24:2160 \
+        RRA:MAX:0.5:6:8736 \
+        RRA:MAX:0.5:288:797 \
+        RRA:LAST:0.5:1:51840 \
+        RRA:LAST:0.5:24:2160 \
+        RRA:LAST:0.5:6:8736 \
+        RRA:LAST:0.5:288:797
+fi
+/usr/bin/rrdtool update ~/www/mrtg/system-memory.rrd N:$(free | grep --color=never "Mem:" | awk '{print $3 * 1024}')
+
+if [ ! -f ~/www/mrtg/battery.rrd ]; then
+    rrdtool create /home/yordano/www/mrtg/battery.rrd --start now-8h --step 60 \
+        DS:power:GAUGE:120:U:1000000 \
+        RRA:AVERAGE:0.5:1:500 \
+        RRA:AVERAGE:0.5:1:51840 \
+        RRA:AVERAGE:0.5:24:2160 \
+        RRA:AVERAGE:0.5:6:8736 \
+        RRA:AVERAGE:0.5:288:797 \
+        RRA:MIN:0.5:1:51840 \
+        RRA:MIN:0.5:24:2160 \
+        RRA:MIN:0.5:6:8736 \
+        RRA:MIN:0.5:288:797 \
+        RRA:MAX:0.5:1:500 \
+        RRA:MAX:0.5:24:2160 \
+        RRA:MAX:0.5:6:8736 \
+        RRA:MAX:0.5:288:797 \
+        RRA:LAST:0.5:1:51840 \
+        RRA:LAST:0.5:24:2160 \
+        RRA:LAST:0.5:6:8736 \
+        RRA:LAST:0.5:288:797
+fi
+/usr/bin/rrdtool update ~/www/mrtg/battery.rrd N:$(upower -d | grep --color=never -A100 BAT1 | grep --color=never percentage | tail -n 1 | awk '{gsub(/%/, ""); print $2}')
+
+# if [ ! -f ~/www/mrtg/bitcoin-price.rrd ]; then
+#     rrdtool create ~/www/mrtg/bitcoin-price.rrd \
+#         --step 300 \
+#         DS:price:GAUGE:600:0:100000000 \
+#         RRA:AVERAGE:0.5:1:500 \
+#         RRA:AVERAGE:0.5:1:51840 \
+#         RRA:AVERAGE:0.5:24:2160 \
+#         RRA:AVERAGE:0.5:6:8736 \
+#         RRA:AVERAGE:0.5:288:797 \
+#         RRA:MIN:0.5:1:51840 \
+#         RRA:MIN:0.5:24:2160 \
+#         RRA:MIN:0.5:6:8736 \
+#         RRA:MIN:0.5:288:797 \
+#         RRA:MAX:0.5:1:500 \
+#         RRA:MAX:0.5:24:2160 \
+#         RRA:MAX:0.5:6:8736 \
+#         RRA:MAX:0.5:288:797 \
+#         RRA:LAST:0.5:1:51840 \
+#         RRA:LAST:0.5:24:2160 \
+#         RRA:LAST:0.5:6:8736 \
+#         RRA:LAST:0.5:288:797
+# fi
+# if test $(find ~/www/mrtg/bitcoin-price.rrd -mmin +4); then
+#     if ! upower -d | grep state | grep discharging 2>&1 > /dev/null; then
+#         /usr/bin/rrdtool update ~/www/mrtg/bitcoin-price.rrd N:$($HOME/bin/preev_price btc)
+#     fi
+# fi
+
+# if [ ! -f ~/www/mrtg/ethereum-price.rrd ]; then
+#     rrdtool create ~/www/mrtg/ethereum-price.rrd \
+#         --step 300 \
+#         DS:price:GAUGE:600:0:100000000 \
+#         RRA:AVERAGE:0.5:1:500 \
+#         RRA:AVERAGE:0.5:1:51840 \
+#         RRA:AVERAGE:0.5:24:2160 \
+#         RRA:AVERAGE:0.5:6:8736 \
+#         RRA:AVERAGE:0.5:288:797 \
+#         RRA:MIN:0.5:1:51840 \
+#         RRA:MIN:0.5:24:2160 \
+#         RRA:MIN:0.5:6:8736 \
+#         RRA:MIN:0.5:288:797 \
+#         RRA:MAX:0.5:1:500 \
+#         RRA:MAX:0.5:24:2160 \
+#         RRA:MAX:0.5:6:8736 \
+#         RRA:MAX:0.5:288:797 \
+#         RRA:LAST:0.5:1:51840 \
+#         RRA:LAST:0.5:24:2160 \
+#         RRA:LAST:0.5:6:8736 \
+#         RRA:LAST:0.5:288:797
+# fi
+# if test $(find ~/www/mrtg/ethereum-price.rrd -mmin +4); then
+#     if ! upower -d | grep state | grep discharging 2>&1 > /dev/null; then
+#         /usr/bin/rrdtool update ~/www/mrtg/ethereum-price.rrd N:$($HOME/bin/preev_price eth)
+#     fi
+# fi
+
+######################################################################
+######################################################################
+######################################################################
+# CREATE GRAPHS
+######################################################################
+######################################################################
+######################################################################
+
+graph_period="4h"
+
+rm -f $HOME/www/mrtg/cpu-temperature.png
+/usr/bin/rrdtool graph $HOME/www/mrtg/cpu-temperature.png --start end-$graph_period --end now --vertical-label="degrees" DEF:temp=$HOME/www/mrtg/cpu-temperature.rrd:temperature:AVERAGE AREA:temp#FF0000:"Temp" GPRINT:temp:LAST:" Current\:%8.2lf %s" GPRINT:temp:AVERAGE:"Average\:%8.2lf %s" GPRINT:temp:MAX:"Maximum\:%8.2lf %s\n" HRULE:60#0000FF:""
+
+rm -f $HOME/www/mrtg/disk-32gb-temperature.png
+/usr/bin/rrdtool graph $HOME/www/mrtg/disk-32gb-temperature.png --start end-$graph_period --end now --vertical-label="degrees" DEF:temp=$HOME/www/mrtg/disk-32gb-temperature.rrd:temperature:AVERAGE AREA:temp#FF0000:"Temp" GPRINT:temp:LAST:" Current\:%8.2lf %s" GPRINT:temp:AVERAGE:"Average\:%8.2lf %s" GPRINT:temp:MAX:"Maximum\:%8.2lf %s\n" HRULE:40#0000FF:""
+
+# rm -f $HOME/www/mrtg/bitcoin-price.png
+# /usr/bin/rrdtool graph $HOME/www/mrtg/bitcoin-price.png --start end-1d --end now --vertical-label="price" DEF:price=$HOME/www/mrtg/bitcoin-price.rrd:price:AVERAGE AREA:price#00CF00:"USD" GPRINT:price:LAST:" Current\:%8.2lf %s" GPRINT:price:AVERAGE:"Average\:%8.2lf %s" GPRINT:price:MAX:"Maximum\:%8.2lf %s\n"
+
+# rm -f $HOME/www/mrtg/ethereum-price.png
+# /usr/bin/rrdtool graph $HOME/www/mrtg/ethereum-price.png --start end-1d --end now --vertical-label="price" DEF:price=$HOME/www/mrtg/ethereum-price.rrd:price:AVERAGE AREA:price#00CF00:"USD" GPRINT:price:LAST:" Current\:%8.2lf %s" GPRINT:price:AVERAGE:"Average\:%8.2lf %s" GPRINT:price:MAX:"Maximum\:%8.2lf %s\n"
+
+rm -f $HOME/www/mrtg/battery.png
+/usr/bin/rrdtool graph $HOME/www/mrtg/battery.png --start end-$graph_period --end now --vertical-label="battery" DEF:power=$HOME/www/mrtg/battery.rrd:power:AVERAGE AREA:power#FF0000:"Bat" GPRINT:power:LAST:" Current\:%8.2lf %s" GPRINT:power:AVERAGE:"Average\:%8.2lf %s" GPRINT:power:MAX:"Maximum\:%8.2lf %s\n" HRULE:40#0000FF:""
+
+rm -f $HOME/www/mrtg/disk-512gb-temperature.png
+/usr/bin/rrdtool graph $HOME/www/mrtg/disk-512gb-temperature.png --start end-$graph_period --end now --vertical-label="degrees" DEF:temp=$HOME/www/mrtg/disk-512gb-temperature.rrd:temperature:AVERAGE AREA:temp#FF0000:"Temp" GPRINT:temp:LAST:" Current\:%8.2lf %s" GPRINT:temp:AVERAGE:"Average\:%8.2lf %s" GPRINT:temp:MAX:"Maximum\:%8.2lf %s\n" HRULE:40#0000FF:""
+
+rm -f $HOME/www/mrtg/wlan-traffic.png
+/usr/bin/rrdtool graph $HOME/www/mrtg/wlan-traffic.png --start end-$graph_period --end now --vertical-label="bytes" DEF:in=$HOME/www/mrtg/wlan-traffic.rrd:in:AVERAGE DEF:out=$HOME/www/mrtg/wlan-traffic.rrd:out:AVERAGE AREA:in#00CF00:"Rx" GPRINT:in:LAST:" Current\:%8.2lf %s" GPRINT:in:AVERAGE:"Average\:%8.2lf %s" GPRINT:in:MAX:"Maximum\:%8.2lf %s\n" LINE1:out#002A97:"Tx" GPRINT:out:LAST:"Current\:%8.2lf %s" GPRINT:out:AVERAGE:"Average\:%8.2lf %s" GPRINT:out:MAX:"Maximum\:%8.2lf %s" HRULE:500000#0000FF:""
+
+rm -f $HOME/www/mrtg/system-memory.png
+/usr/bin/rrdtool graph $HOME/www/mrtg/system-memory.png --start end-$graph_period --end now --vertical-label="GBytes" DEF:mem=$HOME/www/mrtg/system-memory.rrd:mem:AVERAGE DEF:out=$HOME/www/mrtg/system-memory.rrd:mem:AVERAGE AREA:mem#00CF00:"Mem" GPRINT:mem:LAST:" Current\:%8.2lf %s" GPRINT:mem:AVERAGE:"Average\:%8.2lf %s" GPRINT:mem:MAX:"Maximum\:%8.2lf %s\n" HRULE:5000000000#0000FF:""
+
